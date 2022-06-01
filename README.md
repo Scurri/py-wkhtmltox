@@ -1,20 +1,47 @@
+# py-wkhtmltopx
 Python bindings for the fabulous `libwkhtmltox` using Cython
 
 Special thanks to antialize for creating [wkhtmltopdf](http://wkhtmltopdf.org)
 
-For parameters and settings (for users familiar with the command line utility) see:
-
-    http://wkhtmltopdf.org/libwkhtmltox/pagesettings.html
+For parameters and settings (for users familiar with the command line utility)
+see: [page settings](http://wkhtmltopdf.org/libwkhtmltox/pagesettings.html)
 
 ### Installation
+```
+pip install -U -r requirements/build.txt
+pip install -e .
+```
+`pip` can create `wkhtmltox.so` and the file conflicts with `tox` (run locally)
+unless it's deleted. 
+But don't be surprise when `tox` will fail. It is due to dynamic nature of HTML,
+your local system can render HTML slightly different so content of converted
+PDF will be ok, but not (byte by byte) 100% exactly the same all the time.
 
-    $ python setup.py install
+### Building Docker container
+1. In order to build container you need download following Python packages:
+```
+pip download --no-cache-dir -r requirements/docker.txt
+```
+Note: `Cython`, `Pillow`, and `tox` you need `tar.gz` instead of `whl` version.
 
-Tested on:
+2. Put all file into pip-cache directory:
+```
+mkdir pip-cache
+mv *.whl *.tar.gz pip-cache
+```
 
- * Mac OSX 10.6.4 Snow Leopard, Python 2.6.1 (32-bit and 64-bit)
- * CentOS 5.5, Python 2.6.4 (32-bit)
- * Windows 7, Python 2.7.6 (32-bit)
+3. Build container:
+```
+docker-compose build tox
+```
+
+### Tests
+Due to reason form previous section tests need be executed in container to secure
+100% replicteable test environment:
+```
+docker-compose run --rm tox
+```
+Note: It can take up to ~8 min for download and build docker container.
 
 ### Pre-requisites on all platforms:
 
@@ -40,6 +67,7 @@ have `C:\Program Files\wkhtmltopdf\bin` in the path or copy `wkhtmltox.dll` alon
 extension.
 
 ### Cython
-If you want to re-generate C source (or have made changes to the Cython template file, .pyx) you need Cython (tested with 0.13):
-
-    $ easy_install cython
+If you want to re-generate C source (or have made changes to the Cython template file, .pyx) you need Cython (tested with 0.29.24):
+```
+pip install -U Cython==0.29.24
+```
