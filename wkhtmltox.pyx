@@ -88,7 +88,7 @@ cdef class _Pdf:
         
         for page in pages:
             os = wkhtmltopdf_create_object_settings()
-            for k, v in page.iteritems():
+            for k, v in page.items():
                 wkhtmltopdf_set_object_setting(os, k, v)
             wkhtmltopdf_add_object(c, os, NULL)
         

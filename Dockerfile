@@ -27,6 +27,10 @@ RUN apt-get update && apt-get install -y \
     python-pip \
     python-dev
 
+RUN curl --silent https://www.python.org/ftp/python/3.4.10/Python-3.4.10.tgz -o Python-3.4.10.tgz
+RUN tar -xf Python-3.4.10.tgz
+RUN cd Python-3.4.10 && ./configure --enable-optimizations --enable-shared --with-ensurepip=install && make -j2 install
+
 RUN curl --silent -q https://s3-eu-west-1.amazonaws.com/scurri-requirement-debs/wkhtmltox-0.12.2.1_linux-trusty-amd64.deb -o wkhtmltox-0.12.2.1_linux-trusty-amd64.deb
 RUN dpkg -i wkhtmltox-0.12.2.1_linux-trusty-amd64.deb && ldconfig
 
@@ -34,5 +38,4 @@ COPY ./*.py ./*.pyx ./*.toml ./*.cfg ./*.c LICENSE ./
 COPY tests/*.py tests/simple.* tests/*.html tests/
 COPY pip-cache pip-cache
 COPY requirements/* requirements/
-RUN pip install --user --no-index --find-links=file:///app/pip-cache -qr requirements/build.txt
-RUN pip install --user --no-index --find-links=file:///app/pip-cache -qU tox==3.14.0
+RUN pip3 install -Uq -r requirements/build.txt

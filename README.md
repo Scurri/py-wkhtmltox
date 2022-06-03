@@ -11,8 +11,8 @@ see: [page settings](http://wkhtmltopdf.org/libwkhtmltox/pagesettings.html)
 pip install -U -r requirements/build.txt
 pip install -e .
 ```
-`pip` can create `wkhtmltox.so` and the file conflicts with `tox` (run locally)
-unless it's deleted. 
+`pip` can create `wkhtmltox.so` or `wkhtmltox.cpython-34m.so` and the file conflicts
+with `tox` (run locally) unless it's deleted. 
 But don't be surprise when `tox` will fail. It is due to dynamic nature of HTML,
 your local system can render HTML slightly different so content of converted
 PDF will be ok, but not (byte by byte) 100% exactly the same all the time.
